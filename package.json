@@ -16,7 +16,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --env-file=.env index.js"
+    "start": "node --env-file=.env index.js",
+    "deploy": "node --env-file=.env deploy-commands.js"
   },
   "dependencies": {
     "discord.js": "^14.24.2"
