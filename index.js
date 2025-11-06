@@ -8,6 +8,7 @@ const client = new Client({ intents: GatewayIntentBits.Guilds })
 
 // Load command files
 client.commands = new Collection();
+client.cooldowns = new Collection();
 
 const foldersPath = path.join(__dirname, 'commands');
 const commandsFolder = fs.readdirSync(foldersPath);
@@ -43,6 +44,7 @@ for (let file of eventsFolder) {
     client.on(event.name, event.execute); // Instead of (...args) => (event.execute(...args)));
   }
 }
+
 
 // Log in to discord with client token
 client.login(TOKEN);
