@@ -49,9 +49,9 @@ module.exports = {
 
       for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
-        const { data } = require(filePath);
+        const command = require(filePath);
 
-        choices.push(data.name);
+        if ('data' in command && 'execute' in command) choices.push(command.data.name);
       }
     }
 
