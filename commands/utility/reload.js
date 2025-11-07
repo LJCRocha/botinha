@@ -1,12 +1,19 @@
 const { SlashCommandBuilder } = require('discord.js');
+const fs = require('node:fs');
+const path = require('node:path');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('reload')
     .setDescription('Reloads a command')
     .addStringOption(
-      (option) => option.setName('command').setDescription('The command to reload.').setRequired(true)
+      (option) => option
+        .setName('command')
+        .setDescription('The command to reload.')
+        .setRequired(true)
+        .setAutocomplete(true)
     ),
+
   async execute(interaction) {
     const commandName = interaction.options.getString('command', true).toLowerCase();
     const command = interaction.client.commands.get(commandName);
@@ -28,4 +35,28 @@ module.exports = {
       );
     }
   },
+
+  async autocomplete(interaction) {
+    const focusedValue = interaction.options.getFocused();
+    const choices = [];
+
+    const foldersPath = path.join(__dirname, '..');
+    const commandsFolder = fs.readdirSync(foldersPath);
+
+    for (const folder of commandsFolder) {
+      const commandsPath = path.join(foldersPath, folder);
+      const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('js'));
+
+      for (const file of commandFiles) {
+        const filePath = path.join(commandsPath, file);
+        const { data } = require(filePath);
+
+        choices.push(data.name);
+      }
+    }
+
+    const filtered = choices.filter((choice) => choice.startsWith(focusedValue));
+
+    return await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
+  }
 }
