@@ -1,6 +1,6 @@
 const { REST, Routes } = require('discord.js');
 const { error } = require('node:console');
-const { TOKEN, CLIENT_ID, GUILD_ID } = process.env;
+const { TOKEN, CLIENT_ID, GUILD_ID, DEV } = process.env;
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -19,6 +19,8 @@ for (let folder of commandsFolders) {
   for (let file of commandFiles) {
     const filePath = path.join(commandsPath, file);
     const command = require(filePath);
+
+    if (command.devOnly && !DEV) continue;
 
     if ('data' in command && 'execute' in command) {
       commands.push(command.data.toJSON());
