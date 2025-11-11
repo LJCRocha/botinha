@@ -43,13 +43,22 @@ module.exports = {
         const collectorFilter = (i) => i.user.id === interaction.user.id;
 
         try {
-            const confirmation = await response.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 60_000 })
+            const confirmation = await response.resource.message.awaitMessageComponent({
+                filter: collectorFilter,
+                time: 60_000,
+            });
 
             if (confirmation.customId === 'confirm') {
                 await interaction.guild.members.ban(targetUser);
-                await interaction.update({ content: `Banned user ${targetUser} for reason: ${reason}`, components: [] });
+                await interaction.update({
+                    content: `Banned user ${targetUser} for reason: ${reason}`,
+                    components: []
+                });
             } else if (confirmation.customId === 'cancel') {
-                await interaction.update({ content: `Cancelled Ban`, components: [] });
+                await interaction.update({
+                    content: `Cancelled Ban`,
+                    components: []
+                });
             }
         } catch (err) {
             console.error(err);

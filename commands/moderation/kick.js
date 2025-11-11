@@ -34,10 +34,34 @@ module.exports = {
 
         const row = new ActionRowBuilder().addComponents(cancelButton, confirmButton);
 
-        await interaction.reply({
+        const response = await interaction.reply({
             content: `Kicking user ${targetUser} for reason: ${kickReason}`,
             components: [row],
+            withResponse: true,
         });
-        await interaction.guild.members.kick(targetUser);
+
+        const collectorFilter = (i) => i.user.id === interaction.user.id;
+
+        try {
+            const confirmation = await response.resource.message.awaitMessageComponent({
+                filter: collectorFilter,
+                time: 60_000,
+            });
+
+            if (confirmation.customId === 'confirm') {
+                await interaction.guild.members.ban(targetUser);
+                await interaction.update({
+                    content: `Kicked user ${targetUser} for reason: ${reason}`,
+                    components: []
+                });
+            } else if (confirmation.customId === 'cancel') {
+                await interaction.update({
+                    content: `Cancelled Kick`,
+                    components: []
+                });
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 };
