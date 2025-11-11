@@ -22,6 +22,7 @@ module.exports = {
 
   async execute(interaction) {
     const subCommand = interaction.options.getSubcommand(true);
+
     switch (subCommand) {
       case 'user':
         const targetUser = interaction.options.getUser('target', false) || interaction.user;
@@ -42,6 +43,7 @@ module.exports = {
         break;
 
       default:
+        await interaction.reply('Error: This subcommand doesn\'t exist');
         break;
     }
   }
