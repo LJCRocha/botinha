@@ -3,6 +3,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 module.exports = {
+  devOnly: true,
+
   data: new SlashCommandBuilder()
     .setName('reload')
     .setDescription('Reloads a command')
@@ -12,7 +14,8 @@ module.exports = {
         .setDescription('The command to reload.')
         .setRequired(true)
         .setAutocomplete(true)
-    ),
+    )
+    .setDefaultMemberPermissions(0),
 
   async execute(interaction) {
     const commandName = interaction.options.getString('command', true).toLowerCase();
@@ -22,16 +25,17 @@ module.exports = {
       return interaction.reply(`There is no command with name \`${commandName}\`!`);
     }
 
-    delete require.cache[require.resolve(`./${command.data.name}`)];
-
     try {
-      const newCommand = require(`./${command.data.name}`);
+      delete require.cache[require.resolve(command.path)];
+
+      const newCommand = require(command.path);
+      newCommand.path = command.path;
       interaction.client.commands.set(newCommand.data.name, newCommand);
       await interaction.reply(`Command \`${newCommand.data.name}\` was reloaded!`);
     } catch (err) {
       console.error(err);
       await interaction.reply(
-        `There was an error while reloading a command \`${command.data.name}\`:\n\`${err.message}\``,
+        `There was an error while reloading a command \`${command.data.name}\`:\n\`\`\`${err.message}\`\`\``,
       );
     }
   },
