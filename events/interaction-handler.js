@@ -2,74 +2,76 @@ const { Events, MessageFlags, Collection } = require('discord.js');
 
 // Execute commands when called
 module.exports = {
-  name: Events.InteractionCreate,
-  async execute(interaction) {
-    if (interaction.isChatInputCommand()) {
-      const command = interaction.client.commands.get(interaction.commandName);
-      const { cooldowns } = interaction.client;
+    name: Events.InteractionCreate,
+    async execute(interaction) {
+        if (interaction.isChatInputCommand()) {
+            const command = interaction.client.commands.get(interaction.commandName);
+            const { cooldowns } = interaction.client;
 
-      if (!command) {
-        console.error(`No command matching ${interaction.commandName} was found.`);
-        return;
-      }
+            if (!command) {
+                console.error(`No command matching ${interaction.commandName} was found.`);
+                return;
+            }
 
-      if (!cooldowns.has(command.data.name)) {
-        cooldowns.set(command.data.name, new Collection());
-      }
+            if (!cooldowns.has(command.data.name)) {
+                cooldowns.set(command.data.name, new Collection());
+            }
 
-      const nowTimestampsMilliseconds = Date.now();
-      const timestamps = cooldowns.get(command.data.name);
-      const defaultCooldownSeconds = 3;
-      const cooldownAmountMilliseconds = (command.cooldown ?? defaultCooldownSeconds) * 1000;
+            const nowTimestampsMilliseconds = Date.now();
+            const timestamps = cooldowns.get(command.data.name);
+            const defaultCooldownSeconds = 3;
+            const cooldownAmountMilliseconds = (command.cooldown ?? defaultCooldownSeconds) * 1000;
 
-      if (timestamps.has(interaction.user.id)) {
-        const expirationTimeMilliseconds = timestamps.get(interaction.user.id) + cooldownAmountMilliseconds;
+            if (timestamps.has(interaction.user.id)) {
+                const expirationTimeMilliseconds = timestamps.get(interaction.user.id) + cooldownAmountMilliseconds;
 
-        if (nowTimestampsMilliseconds < expirationTimeMilliseconds) {
-          const expiredTimestampSeconds = Math.round(expirationTimeMilliseconds / 1000);
-          return interaction.reply({
-            content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestampSeconds}:R>.`,
-            flags: MessageFlags.Ephemeral,
-          });
+                if (nowTimestampsMilliseconds < expirationTimeMilliseconds) {
+                    const expiredTimestampSeconds = Math.round(expirationTimeMilliseconds / 1000);
+                    return interaction.reply({
+                        content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestampSeconds}:R>.`,
+                        flags: MessageFlags.Ephemeral,
+                    });
+                }
+            }
+
+            timestamps.set(interaction.user.id, nowTimestampsMilliseconds);
+            setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmountMilliseconds);
+
+            try {
+                await command.execute(interaction);
+            } catch (err) {
+                console.error(err);
+                if (interaction.replied || interaction.deferred) {
+                    await interaction.followUp({
+                        content: 'There was an error while executing this command!',
+                        flags: MessageFlags.Ephemeral,
+                    });
+                } else {
+                    await interaction.reply({
+                        content: 'There was an error while executing this command!',
+                        flags: MessageFlags.Ephemeral,
+                    });
+                }
+
+            }
+
+            // log(interaction);
+        } else if (interaction.isAutocomplete()) {
+            const command = interaction.client.commands.get(interaction.commandName);
+
+            if (!command) {
+                console.error(`No command matching ${interaction.commandName} was found.`);
+                return;
+            }
+
+            try {
+                await command.autocomplete(interaction);
+            } catch (error) {
+                console.error(error);
+            }
+
+        } else if (false) {
+            // TODO: Implement messagecomponent handler
         }
-      }
-
-      timestamps.set(interaction.user.id, nowTimestampsMilliseconds);
-      setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmountMilliseconds);
-
-      try {
-        await command.execute(interaction);
-      } catch (err) {
-        console.error(err);
-        if (interaction.replied || interaction.deferred) {
-          await interaction.followUp({
-            content: 'There was an error while executing this command!',
-            flags: MessageFlags.Ephemeral,
-          });
-        } else {
-          await interaction.reply({
-            content: 'There was an error while executing this command!',
-            flags: MessageFlags.Ephemeral,
-          });
-        }
-
-      }
-
-      // log(interaction);
-    } else if (interaction.isAutocomplete()) {
-      const command = interaction.client.commands.get(interaction.commandName);
-
-      if (!command) {
-        console.error(`No command matching ${interaction.commandName} was found.`);
-        return;
-      }
-
-      try {
-        await command.autocomplete(interaction);
-      } catch (error) {
-        console.error(error);
-      }
-
-    }
-  },
+    },
 };
