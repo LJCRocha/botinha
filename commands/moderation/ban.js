@@ -18,6 +18,9 @@ module.exports = {
         .setContexts(InteractionContextType.Guild)
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
 
+    /**
+     * @param {import('discord.js').ChatInputCommandInteraction} interaction
+     */
     async execute(interaction) {
         const targetUser = interaction.options.getUser('target', true);
         const banReason = interaction.options.getString('reason', false) ?? 'No reason provided';
@@ -51,7 +54,7 @@ module.exports = {
             if (confirmation.customId === 'confirm') {
                 await interaction.guild.members.ban(targetUser);
                 await interaction.update({
-                    content: `Banned user ${targetUser} for reason: ${reason}`,
+                    content: `Banned user ${targetUser} for reason: ${banReason}`,
                     components: []
                 });
             } else if (confirmation.customId === 'cancel') {
