@@ -16,14 +16,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --env-file=.env index.js",
+    "start": "node --env-file=.env .",
     "deploy": "node --env-file=.env deploy-commands.js"
   },
   "dependencies": {
     "discord.js": "^14.24.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.0",
-    "eslint": "^9.39.0"
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1"
   }
 }

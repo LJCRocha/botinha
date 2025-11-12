@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "checkJs": true,
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "jsx": "react-jsx", // remove this if you’re not using React
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "**/*.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
