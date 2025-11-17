@@ -1,14 +1,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { GatewayIntentBits } = require('discord.js');
 const { TOKEN } = process.env;
+const BotClient = require('./structures/BotClient.js')
 
 // Create a new client instance 
-const client = new Client({ intents: GatewayIntentBits.Guilds })
-
-// Load command files
-client.commands = new Collection();
-client.cooldowns = new Collection();
+const client = new BotClient({ intents: GatewayIntentBits.Guilds })
 
 const foldersPath = path.join(__dirname, 'commands');
 const commandsFolder = fs.readdirSync(foldersPath);
