@@ -7,7 +7,7 @@ module.exports = {
         .setDescription('Command\'s description'),
 
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction} interaction
+     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('structures/BotClient.js')}} interaction
      */
     async execute(interaction) {
         const exampleEmbed = new EmbedBuilder()
