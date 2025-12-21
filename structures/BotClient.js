@@ -5,9 +5,8 @@ const { DataTypes, Sequelize } = require('sequelize');
 const sqlize = new Sequelize('database', 'user', 'password', {
     host: 'localhost',
     dialect: 'sqlite',
-    logging: console.log,
-    // sqlite specific
-    storage: 'sqlite.db',
+    // logging: console.log,
+    storage: 'sqlite.db', // sqlite specific
 });
 
 class BotClient extends Client {
