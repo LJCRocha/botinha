@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
+    "module": "commonjs",
     "moduleResolution": "Node",
+    "allowJs": true,
     "checkJs": true,
     "strict": false,
     "allowSyntheticDefaultImports": true,
-    "allowJs": true,
-    "jsx": "react-jsx", // remove this if you’re not using React
     "baseUrl": ".",
     "paths": {
       "*": [
