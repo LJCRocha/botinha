@@ -1,10 +1,17 @@
 const { SlashCommandBuilder, EmbedBuilder, } = require("discord.js");
+const path = require('node:path');
+const fs = require('node:fs');
 
 module.exports = {
     devonly: true,
     data: new SlashCommandBuilder()
         .setName('command')
-        .setDescription('Command\'s description'),
+        .setDescription('Command\'s description')
+        .addStringOption((option) => option
+            .setName('option')
+            .setDescription('Option\'s description')
+            .setAutocomplete(true)
+        ),
 
     /**
      * @param {import('discord.js').ChatInputCommandInteraction & {client: import('structures/BotClient.js')}} interaction
@@ -28,6 +35,21 @@ module.exports = {
             .setTimestamp()
             .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
 
-        interaction.channel.send({ embeds: [exampleEmbed] });
+        interaction.reply({
+            embeds: [exampleEmbed]
+        })
+    },
+
+    /**
+    * @param {import('discord.js').AutocompleteInteraction & {client: import('structures/BotClient.js')}} interaction
+    */
+    async autocomplete(interaction) {
+        const focusedValue = interaction.options.getFocused();
+        const choices = ['sapagonda', 'liboginda', 'traturferdo', 'carapingola', 'gerúndio', 'fazêndio', 'sabugo', 'tratoresco', 'tritinbilimbolóia', 'selenemengado', 'tritistosfera', 'clerostato', 'tererrero'];
+
+        const filtered = choices.filter((choice) => choice.startsWith(focusedValue));
+
+        return await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
+
     }
 }
