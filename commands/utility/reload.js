@@ -17,6 +17,9 @@ module.exports = {
         )
         .setDefaultMemberPermissions(0),
 
+    /**
+     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('structures/BotClient.js')}} interaction
+     */
     async execute(interaction) {
         const commandName = interaction.options.getString('command', true).toLowerCase();
         const command = interaction.client.commands.get(commandName);
@@ -40,6 +43,9 @@ module.exports = {
         }
     },
 
+    /**
+    * @param {import('discord.js').AutocompleteInteraction} interaction
+    */
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
         const choices = [];
