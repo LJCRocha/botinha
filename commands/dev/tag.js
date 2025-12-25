@@ -117,7 +117,7 @@ module.exports = {
 
                     return interaction.reply(`Tag ${tagName} added.`);
                 } catch (err) {
-                    if (err = UniqueConstraintError) {
+                    if (err.name == 'SequelizeUniqueConstraintError') {
                         return interaction.reply('That tag already exists');
                     }
 
