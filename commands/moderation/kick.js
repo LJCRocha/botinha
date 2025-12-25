@@ -50,12 +50,12 @@ module.exports = {
 
             if (confirmation.customId === 'confirm') {
                 await interaction.guild.members.ban(targetUser);
-                await interaction.update({
+                await confirmation.update({
                     content: `Kicked user ${targetUser} for reason: ${kickReason}`,
                     components: []
                 });
             } else if (confirmation.customId === 'cancel') {
-                await interaction.update({
+                await confirmation.update({
                     content: `Cancelled Kick`,
                     components: []
                 });

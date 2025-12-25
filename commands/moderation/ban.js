@@ -39,6 +39,7 @@ module.exports = {
 
         const response = await interaction.reply({
             content: `Banning user ${targetUser} for reason: ${banReason}`,
+            // @ts-ignore
             components: [row],
             withResponse: true,
         });
@@ -53,12 +54,12 @@ module.exports = {
 
             if (confirmation.customId === 'confirm') {
                 await interaction.guild.members.ban(targetUser);
-                await interaction.update({
+                await confirmation.update({
                     content: `Banned user ${targetUser} for reason: ${banReason}`,
                     components: []
                 });
             } else if (confirmation.customId === 'cancel') {
-                await interaction.update({
+                await confirmation.update({
                     content: `Cancelled Ban`,
                     components: []
                 });
