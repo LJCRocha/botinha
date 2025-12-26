@@ -24,7 +24,6 @@ module.exports = {
      */
     async execute(interaction) {
         const targetUser = interaction.options.getUser('target', true);
-        const targetMember = await interaction.guild.members.fetch(targetUser.id);
         const banReason = interaction.options.getString('reason', false) ?? 'No reason provided';
 
         if (interaction.user.id === targetUser.id) {
