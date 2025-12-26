@@ -14,7 +14,7 @@ module.exports = {
         const message = `**Pong!!!** with latency \`${latency} ms\``;
         await interaction.editReply(message);
 
-        const random = Math.round(Math.random() * 100);
+        const random = Math.floor(Math.random() * 100);
 
         if (random > 90) {
             await interaction.editReply('No one will believe you');
