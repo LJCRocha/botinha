@@ -4,7 +4,7 @@ module.exports = {
     name: Events.ClientReady,
     once: true,
     /**
-    * @param {import('../structures/BotClient.js')} client
+    * @param {import('../models/BotClient.js')} client
     */
     execute(client) {
         client.tags.sync({ force: true });

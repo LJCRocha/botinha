@@ -14,7 +14,7 @@ module.exports = {
         ),
 
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('structures/BotClient.js')}} interaction
+     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('models/BotClient.js')}} interaction
      */
     async execute(interaction) {
         const dieSides = interaction.options.getInteger('diesides') || 20;

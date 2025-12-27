@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder, } = require("discord.js");
-const { UniqueConstraintError } = require("sequelize");
 
 module.exports = {
     devonly: true,
@@ -72,7 +71,7 @@ module.exports = {
     ,
 
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('structures/BotClient.js')}} interaction
+     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('models/BotClient.js')}} interaction
      */
     async execute(interaction) {
         const subCommand = interaction.options.getSubcommand(true);
@@ -167,7 +166,7 @@ module.exports = {
     },
 
     /**
-    * @param {import('discord.js').AutocompleteInteraction & {client: import('structures/BotClient.js')}} interaction
+    * @param {import('discord.js').AutocompleteInteraction & {client: import('models/BotClient.js')}} interaction
     */
     async autocomplete(interaction) {
         // const subCommand = interaction.options.getSubcommand(true);

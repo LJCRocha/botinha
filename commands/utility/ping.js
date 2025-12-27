@@ -5,7 +5,7 @@ module.exports = {
     data: new SlashCommandBuilder().setName('ping').setDescription('Replies with Pong!'),
 
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('structures/BotClient.js')}} interaction
+     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('models/BotClient.js')}} interaction
      */
     async execute(interaction) {
         const reply = await interaction.reply({ content: `Pinging...`, withResponse: true });
