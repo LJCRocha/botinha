@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags, } = require("discord.js");
 const path = require('node:path');
 const fs = require('node:fs');
 
@@ -63,21 +63,53 @@ module.exports = {
                 console.log(user.toJSON());
                 char = await db.Char.findOne({ where: { name: charName, user_id: user.get('user_id') } });
                 if (char) {
-                    return await interaction.reply('Character already in DB');
+                    return await interaction.reply({
+                        content: 'Character already in DB',
+                        flags: MessageFlags.Ephemeral,
+                    });
                 }
                 await db.Char.upsert({ name: charName, user_id: user.get('user_id') });
-                return await interaction.reply('Added character to DB');
+                return await interaction.reply({
+                    content: 'Added character to DB',
+                    flags: MessageFlags.Ephemeral,
+                });
 
             case 'remove':
                 const destroyed = await db.Char.destroy({ where: { name: charName, user_id: interaction.user.id } })
                 if (!destroyed) {
-                    return await interaction.reply('No such character for this user (gone) (stolem)')
+                    return await interaction.reply({
+                        content: 'No such character for this user (gone) (stolem)',
+                        flags: MessageFlags.Ephemeral,
+                    });
                 }
-                return await interaction.reply('Successfully destroyed character (no mercy)')
+
+                return await interaction.reply({
+                    content: 'Successfully destroyed character (no mercy)',
+                    flags: MessageFlags.Ephemeral,
+                });
 
             case 'rename':
                 const newCharName = interaction.options.getString('newcharname', true);
-                await db.Char.update({ name: newCharName }, { where: { name: charName, user_id: interaction.user.id } });
+                const checkQuery = await db.Char.findOne({ where: { name: newCharName } });
+                if (checkQuery) {
+                    return await interaction.reply({
+                        content: `Character ${newCharName} already exists for this user.`,
+                        flags: MessageFlags.Ephemeral,
+                    });
+                }
+                const [updatedRows] = await db.Char.update({ name: newCharName }, { where: { name: charName, user_id: interaction.user.id } });
+                if (!updatedRows) {
+                    return await interaction.reply({
+                        content: `No character ${charName} found for user.`,
+                        flags: MessageFlags.Ephemeral,
+                    });
+                }
+
+                return await interaction.reply({
+                    content: 'Successfully updated character name.',
+                    flags: MessageFlags.Ephemeral,
+                });
+
             default:
                 break;
         }
