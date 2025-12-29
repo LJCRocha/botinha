@@ -88,7 +88,7 @@ module.exports = {
 
         } catch (err) {
             if (err.name === 'InteractionCollectorError') {
-                await interaction.followUp('No response after 60 seconds, ban cancelled.');
+                return await interaction.followUp('No response after 60 seconds, ban cancelled.');
             } else {
                 console.error(err);
             }
