@@ -56,12 +56,12 @@ Char.belongsTo(User, {
 const Item = sqlize.define('item',
     {
         name: DataTypes.STRING,
-        defaultUnit: {
-            type: DataTypes.STRING,
-        },
-        defaultPrice: {
-            type: DataTypes.NUMBER,
-        }
+        // defaultUnit: {
+        //     type: DataTypes.STRING,
+        // },
+        // defaultPrice: {
+        //     type: DataTypes.NUMBER,
+        // }
     }
 );
 
