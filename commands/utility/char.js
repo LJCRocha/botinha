@@ -17,7 +17,7 @@ module.exports = {
             )
         )
         .addSubcommand((subcommand) => subcommand
-            .setName('rm')
+            .setName('remove')
             .setDescription('Remove a character for your user.')
             .addStringOption((option) => option
                 .setName('charname')
@@ -25,6 +25,22 @@ module.exports = {
                 .setAutocomplete(true)
                 .setRequired(true)
             )
+        )
+        .addSubcommand((subcommand) => subcommand
+            .setName('rename')
+            .setDescription('Rename a character')
+            .addStringOption((option) => option
+                .setName('charname')
+                .setDescription('Name of the character to rename.')
+                .setAutocomplete(true)
+                .setRequired(true)
+            )
+            .addStringOption((option) => option
+                .setName('newcharname')
+                .setDescription('New name for the character.')
+                .setRequired(true)
+            )
+
         )
     ,
 
@@ -52,13 +68,16 @@ module.exports = {
                 await db.Char.upsert({ name: charName, user_id: user.get('user_id') });
                 return await interaction.reply('Added character to DB');
 
-            case 'rm':
+            case 'remove':
                 const destroyed = await db.Char.destroy({ where: { name: charName, user_id: interaction.user.id } })
                 if (!destroyed) {
                     return await interaction.reply('No such character for this user (gone) (stolem)')
                 }
                 return await interaction.reply('Successfully destroyed character (no mercy)')
 
+            case 'rename':
+                const newCharName = interaction.options.getString('newcharname', true);
+                await db.Char.update({ name: newCharName }, { where: { name: charName, user_id: interaction.user.id } });
             default:
                 break;
         }
@@ -68,25 +87,15 @@ module.exports = {
     * @param {import('discord.js').AutocompleteInteraction & {client: import('models/BotClient.js')}} interaction
     */
     async autocomplete(interaction) {
-        const subCommand = interaction.options.getSubcommand(true);
         const db = interaction.client.db;
 
-        if (subCommand == 'rm') {
-            const focusedValue = interaction.options.getFocused();
-            const choices = await db.Char.findAll({ where: { user_id: interaction.user.id } });
-
-            /** @type {any[]} */
-            const nameChoices = choices.map((choice) => choice.get('name'))
-
-            const filtered = nameChoices.filter((choice) => choice.startsWith(focusedValue));
-
-            return await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
-        }
-
         const focusedValue = interaction.options.getFocused();
-        const choices = ['sapagonda', 'liboginda', 'traturferdo', 'carapingola', 'gerúndio', 'fazêndio', 'sabugo', 'tratoresco', 'tritinbilimbolóia', 'selenemengado', 'tritistosfera', 'clerostato', 'tererrero'];
+        const choices = await db.Char.findAll({ where: { user_id: interaction.user.id } });
 
-        const filtered = choices.filter((choice) => choice.startsWith(focusedValue));
+        /** @type {any[]} */
+        const nameChoices = choices.map((choice) => choice.get('name'))
+
+        const filtered = nameChoices.filter((choice) => choice.startsWith(focusedValue));
 
         return await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
 
