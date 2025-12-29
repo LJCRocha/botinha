@@ -3,10 +3,9 @@ const path = require('node:path');
 const fs = require('node:fs');
 
 module.exports = {
-    devonly: true,
     data: new SlashCommandBuilder()
         .setName('char')
-        .setDescription('Change char in DB')
+        .setDescription('Manage characters in DB.')
         .addSubcommand((subcommand) => subcommand
             .setName('add')
             .setDescription('Adds a character for your user.')
@@ -61,14 +60,9 @@ module.exports = {
                 });
                 user = upserted[0];
                 console.log(user.toJSON());
-                char = await db.Char.findOne({ where: { name: charName, user_id: user.get('user_id') } });
-                if (char) {
-                    return await interaction.reply({
-                        content: 'Character already in DB',
-                        flags: MessageFlags.Ephemeral,
-                    });
-                }
+                // Fine to not check because unique('name', 'user_id')
                 await db.Char.upsert({ name: charName, user_id: user.get('user_id') });
+
                 return await interaction.reply({
                     content: 'Added character to DB',
                     flags: MessageFlags.Ephemeral,
@@ -90,19 +84,18 @@ module.exports = {
 
             case 'rename':
                 const newCharName = interaction.options.getString('newcharname', true);
-                const checkQuery = await db.Char.findOne({ where: { name: newCharName } });
-                if (checkQuery) {
-                    return await interaction.reply({
-                        content: `Character ${newCharName} already exists for this user.`,
-                        flags: MessageFlags.Ephemeral,
-                    });
-                }
-                const [updatedRows] = await db.Char.update({ name: newCharName }, { where: { name: charName, user_id: interaction.user.id } });
-                if (!updatedRows) {
-                    return await interaction.reply({
-                        content: `No character ${charName} found for user.`,
-                        flags: MessageFlags.Ephemeral,
-                    });
+
+                try {
+                    await db.Char.update({ name: newCharName }, { where: { name: charName, user_id: interaction.user.id } });
+                } catch (err) {
+                    if (err.name == 'SequelizeUniqueConstraintError') {
+                        return await interaction.reply({
+                            content: `Character \'${newCharName}\' already exists for user.`,
+                            flags: MessageFlags.Ephemeral,
+                        });
+                    } else {
+                        console.error(err);
+                    }
                 }
 
                 return await interaction.reply({

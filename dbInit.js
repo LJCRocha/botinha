@@ -25,8 +25,19 @@ const Char = sqlize.define('char',
     {
         name: {
             type: DataTypes.STRING,
+        },
+        user_id: {
+            type: DataTypes.INTEGER,
         }
     },
+    {
+        indexes: [
+            {
+                unique: true,
+                fields: ['name', 'user_id'],
+            },
+        ],
+    }
 );
 
 User.hasMany(Char, {
@@ -35,7 +46,12 @@ User.hasMany(Char, {
         allowNull: false,
     },
 });
-Char.belongsTo(User);
+Char.belongsTo(User, {
+    foreignKey: {
+        name: 'user_id',
+        allowNull: false,
+    }
+});
 
 const Item = sqlize.define('item',
     {
