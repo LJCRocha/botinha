@@ -1,13 +1,6 @@
 const { Client, Collection } = require('discord.js');
 const { DataTypes, Sequelize } = require('sequelize');
-
-// Initialize database
-const sqlize = new Sequelize('database', 'user', 'password', {
-    host: 'localhost',
-    dialect: 'sqlite',
-    // logging: console.log,
-    storage: 'sqlite.db', // sqlite specific
-});
+const db = require('../dbInit.js');
 
 class BotClient extends Client {
     /**
@@ -18,7 +11,8 @@ class BotClient extends Client {
         // Load commands and cooldowns
         this.commands = new Collection();
         this.cooldowns = new Collection();
-        this.tags = sqlize.define('tags', {
+        this.db = db;
+        this.tags = this.db.sqlize.define('tags', {
             name: {
                 type: DataTypes.STRING,
                 unique: true,
