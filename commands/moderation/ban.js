@@ -1,4 +1,6 @@
 const { ActionRowBuilder, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const path = require('node:path');
+const fs = require('node:fs');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -49,7 +51,13 @@ module.exports = {
             withResponse: true,
         });
 
-        const imageAttachment = new AttachmentBuilder('./media/fora_do_grupo.png');
+        const mediaPath = path.join(__dirname, '..', '..', 'media');
+        const exts = ['.png', '.jpg', '.jped', '.webp', '.gif'];
+
+        const banFilesPath = path.join(mediaPath, 'BanMedia');
+        const banFiles = fs.readdirSync(banFilesPath)
+            .filter((file) => exts.some((ext) => file.endsWith(ext)));
+
         const applicationMember = await interaction.guild.members.fetch(interaction.user.id);
 
         const banEmbed = new EmbedBuilder()
@@ -57,10 +65,26 @@ module.exports = {
             .setTitle(`User ${targetUser.globalName ?? targetUser.username} was banned (gone) (stolem)`)
             .setAuthor({ name: interaction.user.globalName ?? interaction.user.username, iconURL: applicationMember.displayAvatarURL() })
             // .setDescription(banReason)
-            .setThumbnail('attachment://fora_do_grupo.png')
+            // .setThumbnail('attachment://fora_do_grupo.png')
             .addFields({ name: 'Reason', value: banReason, inline: true })
             .setTimestamp()
             .setFooter({ text: `Executed by ${interaction.client.user.username}`, iconURL: interaction.client.user.displayAvatarURL() });
+
+        let reply = {
+            content: '',
+            embeds: [banEmbed],
+            components: []
+        };
+
+        if (banFiles.length !== 0) {
+            const attachmentFile = banFiles[Math.floor(Math.random() * banFiles.length)];
+            const attachmentFilePath = path.join(mediaPath, 'BanMedia', attachmentFile);
+
+            const imageAttachment = new AttachmentBuilder(attachmentFilePath);
+            banEmbed.setThumbnail('attachment://' + attachmentFile)
+                .setFooter({ text: attachmentFile.replaceAll('_', ' ') });
+            reply.files = [imageAttachment];
+        }
 
         const collectorFilter = (i) => i.user.id === interaction.user.id;
 
@@ -72,12 +96,7 @@ module.exports = {
 
             if (confirmation.customId === 'confirm') {
                 await interaction.guild.members.ban(targetUser);
-                await confirmation.update({
-                    content: '',
-                    embeds: [banEmbed],
-                    files: [imageAttachment],
-                    components: []
-                });
+                await confirmation.update(reply);
 
             } else if (confirmation.customId === 'cancel') {
                 await confirmation.update({
