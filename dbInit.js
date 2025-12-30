@@ -55,7 +55,10 @@ Char.belongsTo(User, {
 
 const Item = sqlize.define('item',
     {
-        name: DataTypes.STRING,
+        name: {
+            type: DataTypes.STRING,
+            unique: true,
+        }
         // defaultUnit: {
         //     type: DataTypes.STRING,
         // },
@@ -69,7 +72,8 @@ const Inventory = sqlize.define('inventory',
     {
         amount: {
             type: DataTypes.INTEGER,
-            defaultValue: 1,
+            allowNull: false,
+            defaultValue: 0,
         },
         itemId: {
             type: DataTypes.INTEGER,
@@ -87,6 +91,8 @@ const Inventory = sqlize.define('inventory',
         }
     }
 );
+
+// TODO: Change db so Char.hasMany(Item) and Item.belongsTo(Char)
 
 Char.belongsToMany(Item, { through: Inventory });
 Item.belongsToMany(Char, { through: Inventory });
