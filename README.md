@@ -38,7 +38,7 @@ Simple command to experiment with embeds and buttons.
 
 #### /tag
 
-Command to create, delete and view tags (short messages stored in a database).
+Command with subcommands to create, delete and view tags (messages stored in a database).
 Contains subcommands
 
 -

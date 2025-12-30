@@ -1,5 +1,5 @@
 const { Events } = require('discord.js');
-const force = true;
+const force = false;
 
 module.exports = {
     name: Events.ClientReady,
