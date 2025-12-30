@@ -14,7 +14,7 @@ module.exports = {
         ),
 
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('structures/BotClient.js')}} interaction
+     * @param {import('discord.js').ChatInputCommandInteraction & {client: import('models/BotClient.js')}} interaction
      */
     async execute(interaction) {
         const exampleEmbed = new EmbedBuilder()
@@ -41,7 +41,7 @@ module.exports = {
     },
 
     /**
-    * @param {import('discord.js').AutocompleteInteraction & {client: import('structures/BotClient.js')}} interaction
+    * @param {import('discord.js').AutocompleteInteraction & {client: import('models/BotClient.js')}} interaction
     */
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
