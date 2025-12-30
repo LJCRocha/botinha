@@ -55,13 +55,14 @@ module.exports = {
 
         switch (subCommand) {
             case 'add':
-                const upserted = await db.User.upsert({
-                    username: interaction.user.username, user_id: interaction.user.id
+                const [userInstance] = await db.User.findOrCreate({
+                    where: {
+                        username: interaction.user.username, user_id: interaction.user.id
+                    }
                 });
-                user = upserted[0];
-                console.log(user.toJSON());
+
                 // Fine to not check because unique('name', 'user_id')
-                await db.Char.upsert({ name: charName, user_id: user.get('user_id') });
+                await db.Char.upsert({ name: charName, user_id: userInstance.get('user_id') });
 
                 return await interaction.reply({
                     content: 'Added character to DB',
