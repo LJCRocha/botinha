@@ -5,6 +5,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('tag')
         .setDescription('Fetches tag')
+
         .addSubcommand((subcommand) => subcommand
             .setName('find')
             .setDescription('Finds Tag in DB.')
@@ -15,10 +16,12 @@ module.exports = {
                 .setAutocomplete(true)
             )
         )
+
         .addSubcommand((subcommand) => subcommand
             .setName('list')
             .setDescription('List Tags in DB.')
         )
+
         .addSubcommand((subcommand) => subcommand
             .setName('add')
             .setDescription('Adds tag to list')
@@ -33,6 +36,7 @@ module.exports = {
                 .setDescription('Description of added tag')
             )
         )
+
         .addSubcommand((subcommand) => subcommand
             .setName('delete')
             .setDescription('Deletes a tag from the DB')
@@ -43,6 +47,7 @@ module.exports = {
                 .setAutocomplete(true)
             )
         )
+
         .addSubcommand((subcommand) => subcommand
             .setName('edit')
             .setDescription('Change description of tag')
@@ -58,6 +63,7 @@ module.exports = {
                 .setRequired(true)
             )
         )
+
         .addSubcommand((subcommand) => subcommand
             .setName('info')
             .setDescription('Get info on tag')

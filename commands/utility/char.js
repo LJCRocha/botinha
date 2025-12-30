@@ -6,6 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('char')
         .setDescription('Manage characters in DB.')
+
         .addSubcommand((subcommand) => subcommand
             .setName('add')
             .setDescription('Adds a character for your user.')
@@ -15,6 +16,7 @@ module.exports = {
                 .setRequired(true)
             )
         )
+
         .addSubcommand((subcommand) => subcommand
             .setName('remove')
             .setDescription('Remove a character for your user.')
@@ -25,6 +27,7 @@ module.exports = {
                 .setRequired(true)
             )
         )
+
         .addSubcommand((subcommand) => subcommand
             .setName('rename')
             .setDescription('Rename a character')
@@ -121,7 +124,7 @@ module.exports = {
         /** @type {any[]} */
         const nameChoices = choices.map((choice) => choice.get('name'))
 
-        const filtered = nameChoices.filter((choice) => choice.startsWith(focusedValue));
+        const filtered = nameChoices.filter((choice) => choice.toLowerCase().startsWith(focusedValue.toLowerCase()));
 
         return await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
 

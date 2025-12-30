@@ -4,6 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('info')
         .setDescription('Info Command')
+
         .addSubcommand((subcommand) => subcommand
             .setName('user')
             .setDescription('Info about the user')
@@ -12,6 +13,7 @@ module.exports = {
                 .setDescription('User to be info\'d')
             )
         )
+
         .addSubcommand((subcommand) => subcommand
             .setName('server')
             .setDescription('Info about the server')
