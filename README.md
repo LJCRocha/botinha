@@ -2,6 +2,7 @@
 
 <!--toc:start-->
 - [Botinha](#botinha)
+  - [Description](#description)
   - [Features](#features)
   - [Setup](#setup)
   - [Commands](#commands)
@@ -24,9 +25,20 @@
   - [Events](#events)
     - [ready](#ready)
     - [interactionCreate](#interactioncreate)
+  - [Media](#media)
 <!--toc:end-->
 
 CS50 final project, means "Little bot" in portuguese
+
+## Description
+
+Its a bot made to help manage inventories of RPG characters in a discord server.
+It's also capable of simple moderation capabilities and simple fun stuff like dice
+rolling.
+There's more planned for it, like better UI and UX for item management, and adding
+support for a 'DM' to control the items of char.
+
+Video Demo: <https://youtu.be/RvupZz2ylic>
 
 ## Features
 
@@ -49,7 +61,18 @@ Then, run this in the project root (the one with the app.js and package.json)
 To download dependencies:
 
 ``` bash
-npm run install
+npm install
+```
+
+Then, create a discord app, enable it as a Bot and complete the
+.env.sample file's fields with your app's token, clientId, the guildId of the
+guild you want to add it to, and optionally change dev to true.
+
+See [Application Setup | discord.js](https://discordjs.guide/legacy/preparations/app-setup)
+
+``` bash
+npm run deploy
+npm run start
 ```
 
 ## Commands
