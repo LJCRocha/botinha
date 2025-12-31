@@ -38,6 +38,13 @@ rolling.
 There's more planned for it, like better UI and UX for item management, and adding
 support for a 'DM' to control the items of char.
 
+Currently, the project is meant to be run locally, but eventually it'll be made
+as a public bot to be installed in servers around the world.
+It's manly run with a database 'sqlite.db' (created automatically),
+stored locally in the project folder.
+
+Uses Sequelize under the hood.
+
 Video Demo: <https://youtu.be/RvupZz2ylic>
 
 ## Features
