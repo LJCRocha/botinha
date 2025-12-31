@@ -2,7 +2,9 @@ const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     cooldown: 2,
-    data: new SlashCommandBuilder().setName('ping').setDescription('Replies with Pong!'),
+    data: new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('Replies with Pong!'),
 
     /**
      * @param {import('discord.js').ChatInputCommandInteraction & {client: import('models/BotClient.js')}} interaction

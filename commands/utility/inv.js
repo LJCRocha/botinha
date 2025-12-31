@@ -7,6 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('inv')
         .setDescription('Manage Inventory in DB.')
+
         .addSubcommand((subcommand) => subcommand
             .setName('add')
             .setDescription('Adds an item to your character')
@@ -125,7 +126,7 @@ module.exports = {
                 itemCount = charInventory.get('amount');
             }
 
-            await charInventory.decrement(itemCount);
+            await charInventory.decrement('amount', { by: itemCount });
             await charInventory.reload();
             return await interaction.reply({
                 content: `Decreased ${charName} ${itemName} to ${charInventory.get('amount')}.`,
@@ -138,9 +139,8 @@ module.exports = {
                 .setColor(0x0099ff)
                 .setTitle(`Items of ${charName}:`)
                 .setAuthor({ name: interaction.user.globalName ?? interaction.user.username, iconURL: interaction.user.displayAvatarURL() })
-                // .addFields({ name: 'Inline field title', value: 'Some value here', inline: true })
                 .setTimestamp()
-                .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
+                .setFooter({ text: 'ME WHEN SABÃO EM PÓ' });
 
             const char = await db.Char.findOne({
                 where: { user_id: interaction.user.id, name: charName },
@@ -151,6 +151,12 @@ module.exports = {
                     }
                 }]
             });
+            if (!char) {
+                return await interaction.reply({
+                    content: `You don't have a character named ${charName}`,
+                    flags: MessageFlags.Ephemeral,
+                });
+            }
 
             const itemsList = /** @type {any[]} */ (char.get('items'));
 
